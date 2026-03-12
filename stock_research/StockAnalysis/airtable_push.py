@@ -40,38 +40,51 @@ def _post(table: str, fields: dict) -> dict:
 
 def push_signal(signal: dict) -> str:
     """
-    Push one insider signal to the InsiderSignals table.
+    Push one insider signal to the Raw Insider Data table.
     Returns the Airtable record ID.
+
+    Column mapping (Airtable field → pipeline key):
+      Ticker            ← ticker
+      Insider Name      ← insider_name
+      Insider Title     ← title
+      Trade Date        ← trade_date
+      Filing Date       ← scan_date
+      Shares Traded     ← shares
+      Price Per Share   ← price_paid
+      Value             ← total_value
+      Is Multiple Buy   ← is_repeat_buy  (checkbox)
+      Buy Type          ← variant  (V1 / V2)
+      Transaction Type  ← "Buy"
+      Processing Status ← scoring summary  (Score + Rating)
+      Notes             ← full rationale + entry/stop/TP + SPY note
     """
+    tp = signal["take_profit"] if signal["take_profit"] else "Hold to Close"
+    notes_parts = [
+        signal["rationale"],
+        f"Entry: {signal['entry_price']} | Stop: {signal['stop_loss']} | TP: {tp}",
+        f"ATR%: {signal['atr_pct']} | Vol$M: {signal['dollar_volume_m']} | 52W-High: {signal['high_52w']}",
+    ]
+    if signal.get("spy_gap_note"):
+        notes_parts.append(f"SPY: {signal['spy_gap_note']}")
+    if signal.get("same_day_insiders", 1) > 1:
+        notes_parts.append(f"Same-day insiders: {signal['same_day_insiders']}")
+    if signal.get("disclaimer"):
+        notes_parts.append(signal["disclaimer"])
+
     fields = {
         "Ticker":             signal["ticker"],
-        "Company":            signal["company"],
         "Insider Name":       signal["insider_name"],
         "Insider Title":      signal["title"],
         "Trade Date":         signal["trade_date"],
         "Filing Date":        signal["scan_date"],
         "Shares Traded":      signal["shares"],
-        "Price Paid":         signal["price_paid"],
-        "Total Value ($)":    signal["total_value"],
-        "Last Close":         signal["last_close"],
-        "ATR %":              signal["atr_pct"],
-        "Dollar Volume ($M)": signal["dollar_volume_m"],
-        "52W High":           signal["high_52w"],
-        "Variant":            signal["variant"],
-        "Entry Price":        signal["entry_price"],
-        "Stop Loss":          signal["stop_loss"],
-        "Take Profit":        signal["take_profit"] if signal["take_profit"] else "Hold to Close",
-        "Insider Strength":   signal["insider_strength"],
-        "Volatility Score":   signal["volatility_score"],
-        "Liquidity Score":    signal["liquidity_score"],
-        "Timing Score":       signal["timing_score"],
-        "Total Score":        signal["total_score"],
-        "Rating":             signal["rating"],
-        "Rationale":          signal["rationale"],
-        "Same-Day Insiders":  signal["same_day_insiders"],
-        "Repeat Buy":         signal["is_repeat_buy"],
-        "SPY Gap Note":       signal["spy_gap_note"],
-        "Disclaimer":         signal["disclaimer"],
+        "Price Per Share":    signal["price_paid"],
+        "Value":              signal["total_value"],
+        "Is Multiple Buy":    bool(signal["is_repeat_buy"]),
+        "Buy Type":           signal["variant"],
+        "Transaction Type":   "Buy",
+        "Processing Status":  f"Score: {signal['total_score']} | {signal['rating']}",
+        "Notes":              "\n".join(notes_parts),
     }
     record = _post(TABLE_INSIDER, fields)
     record_id = record.get("id", "unknown")
