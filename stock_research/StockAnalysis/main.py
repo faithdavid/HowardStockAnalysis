@@ -22,9 +22,9 @@ import os
 from dotenv import load_dotenv
 
 from scraper import fetch_insider_buys
-from market_data import get_market_data
+from marketdata import get_market_data
 from scorer import score_trade, detect_repeat_buys, count_same_day_insiders
-from airtable_push import push_all_signals, log_run
+from airtablePush import push_all_signals, log_run
 from alerts import send_alert
 
 load_dotenv()

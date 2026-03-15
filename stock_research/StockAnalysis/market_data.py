@@ -9,6 +9,7 @@ Falls back to yfinance if Polygon key is not set or call fails.
 import logging
 import os
 import requests
+import pandas as pd
 from datetime import date, timedelta
 from dotenv import load_dotenv
 
@@ -116,11 +117,28 @@ def _get_from_yfinance(ticker: str) -> dict | None:
             logger.warning(f"yfinance: not enough data for {ticker}")
             return None
 
-        closes  = data["Close"].dropna().tolist()
-        highs   = data["High"].dropna().tolist()
-        volumes = data["Volume"].dropna().tolist()
+        closes_series = data["Close"]
+        highs_series = data["High"]
+        lows_series = data["Low"]
+        volume_series = data["Volume"]
 
-        recent = data.tail(15)
+        # yfinance may return MultiIndex columns for a single ticker (e.g., Close/GWRS)
+        if hasattr(closes_series, "columns") and not closes_series.empty:
+            closes_series = closes_series.iloc[:, 0]
+            highs_series = highs_series.iloc[:, 0]
+            lows_series = lows_series.iloc[:, 0]
+            volume_series = volume_series.iloc[:, 0]
+
+        closes  = closes_series.dropna().tolist()
+        highs   = highs_series.dropna().tolist()
+        volumes = volume_series.dropna().tolist()
+
+        recent = pd.DataFrame({
+            "High": highs_series,
+            "Low": lows_series,
+            "Close": closes_series,
+        }).dropna().tail(15)
+
         tr_list = []
         for i in range(1, len(recent)):
             high       = float(recent["High"].iloc[i])
