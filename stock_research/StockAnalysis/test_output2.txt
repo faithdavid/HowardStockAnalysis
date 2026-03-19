@@ -1,0 +1,197 @@
+﻿python : 03:12:08  
+INFO      =============
+=======================
+=======================
+=
+At line:1 char:1
++ python 
+test_pipeline.py 2>&1 
+| ForEach-Object { $_ 
+} | Out-File -File ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (03:12:08  INF   
+ O ...=============    
+==:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+03:12:08  INFO      
+PIPELINE TEST ù SAMPLE 
+DATA MODE
+03:12:08  INFO      
+Market data: SYNTHETIC 
+(forced to qualify)
+03:12:08  INFO      ===
+=======================
+=======================
+===========
+03:12:11  INFO      
+Repeat keys detected: 
+set()
+03:12:11  INFO      
+Same-day insider 
+counts: {'TVE.TO': 1, 
+'WCP.TO': 1, 'ATH.TO': 
+2}
+03:12:11  INFO        
+\u2705 TVE.TO    
+score= 69.3  
+rating=Good       
+variant=V2  SL=$7.76  
+TP=Hold to close
+03:12:11  INFO         
+  rationale: 
+First-time buy (no 
+repeat in 30 days) | 
+Strong insider 
+(Director)
+03:12:11  INFO        
+\u2705 WCP.TO    
+score= 70.5  
+rating=Good       
+variant=V2  SL=$10.07  
+TP=Hold to close
+03:12:11  INFO         
+  rationale: 
+First-time buy (no 
+repeat in 30 days) | 
+Strong insider 
+(President & CEO)
+03:12:11  INFO        
+\u2705 ATH.TO    
+score= 70.9  
+rating=Good       
+variant=V2  SL=$3.71  
+TP=Hold to close
+03:12:11  INFO         
+  rationale: 2 
+insiders bought same 
+day | First-time buy 
+(no repeat in 30 days) 
+| Strong insider (CEO)
+03:12:11  INFO        
+\u2705 ATH.TO    
+score= 68.1  
+rating=Good       
+variant=V2  SL=$3.71  
+TP=Hold to close
+03:12:11  INFO         
+  rationale: 2 
+insiders bought same 
+day | First-time buy 
+(no repeat in 30 days)
+03:12:11  INFO      
+\u2500\u2500\u2500\u250
+0\u2500\u2500\u2500\u25
+00\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u
+2500\u2500\u2500\u2500\
+u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u250
+0\u2500\u2500\u2500\u25
+00\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u
+2500\u2500\u2500\u2500\
+u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u250
+0\u2500\u2500\u2500\u25
+00\u2500\u2500\u2500\u2
+500\u2500\u2500
+03:12:11  INFO      
+Total qualifying 
+signals: 4
+03:12:11  INFO      
+--- Pushing signals to 
+Airtable: Raw Insider 
+Data ---
+03:12:12  ERROR     
+Airtable error 422: {"e
+rror":{"type":"INVALID_
+VALUE_FOR_COLUMN","mess
+age":"Cannot parse 
+value for field Buy 
+Type"}}
+03:12:12  ERROR     
+Failed to push TVE.TO: 
+422 Client Error: 
+Unprocessable Entity 
+for url: https://api.ai
+rtable.com/v0/appGyPlDs
+COIc8lWG/Raw%20Insider%
+20Data
+03:12:13  ERROR     
+Airtable error 422: {"e
+rror":{"type":"INVALID_
+VALUE_FOR_COLUMN","mess
+age":"Cannot parse 
+value for field Buy 
+Type"}}
+03:12:13  ERROR     
+Failed to push WCP.TO: 
+422 Client Error: 
+Unprocessable Entity 
+for url: https://api.ai
+rtable.com/v0/appGyPlDs
+COIc8lWG/Raw%20Insider%
+20Data
+03:12:14  ERROR     
+Airtable error 422: {"e
+rror":{"type":"INVALID_
+VALUE_FOR_COLUMN","mess
+age":"Cannot parse 
+value for field Buy 
+Type"}}
+03:12:14  ERROR     
+Failed to push ATH.TO: 
+422 Client Error: 
+Unprocessable Entity 
+for url: https://api.ai
+rtable.com/v0/appGyPlDs
+COIc8lWG/Raw%20Insider%
+20Data
+03:12:15  ERROR     
+Airtable error 422: {"e
+rror":{"type":"INVALID_
+VALUE_FOR_COLUMN","mess
+age":"Cannot parse 
+value for field Buy 
+Type"}}
+03:12:15  ERROR     
+Failed to push ATH.TO: 
+422 Client Error: 
+Unprocessable Entity 
+for url: https://api.ai
+rtable.com/v0/appGyPlDs
+COIc8lWG/Raw%20Insider%
+20Data
+03:12:15  WARNING   No 
+records were returned 
+from Airtable
+03:12:15  INFO      
+--- Sending Zapier 
+webhook alert ---
+03:12:16  INFO      
+Alert sent to Zapier 
+\u2192 status 200
+03:12:16  INFO      
+\u2705 Zapier alert 
+sent! Check your 
+Zapier dashboard 
+\u2192 Task History
+03:12:16  INFO      
+=======================
+=======================
+==============
+03:12:16  INFO      
+TEST COMPLETE ù check 
+Airtable + Zapier for 
+received data
+03:12:16  INFO      ===
+=======================
+=======================
+===========

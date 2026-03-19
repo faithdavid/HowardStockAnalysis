@@ -1,0 +1,105 @@
+﻿python : 02:59:35  
+INFO      =============
+=======================
+=======================
+=
+At line:1 char:1
++ python 
+test_pipeline.py 2>&1 
+| Out-File -FilePath 
+"test_output.txt" - ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (02:59:35  INF   
+ O ...=============    
+==:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+02:59:35  INFO      
+PIPELINE TEST ù SAMPLE 
+DATA MODE
+02:59:35  INFO      ===
+=======================
+=======================
+===========
+02:59:38  INFO      
+Repeat keys: set()
+02:59:38  INFO      
+Same-day counts: 
+{'SU.TO': 1, 'CNQ.TO': 
+1, 'BNS.TO': 1, 
+'WCP.TO': 1, 'TVE.TO': 
+1}
+02:59:38  INFO      
+Fetching market data 
+for SU.TO...
+02:59:41  INFO      
+Polygon OK SU.TO: 
+close=$61.32, 
+ATR=2.5%, vol=$332.7M
+02:59:41  INFO        
+SU.TO     did not 
+qualify for V1 or V2 
+today
+02:59:41  INFO      
+Fetching market data 
+for CNQ.TO...
+02:59:53  INFO      
+Polygon OK CNQ.TO: 
+close=$48.98, 
+ATR=2.8%, vol=$572.4M
+02:59:53  INFO        
+CNQ.TO    did not 
+qualify for V1 or V2 
+today
+02:59:53  INFO      
+Fetching market data 
+for BNS.TO...
+03:00:05  INFO      
+Polygon OK BNS.TO: 
+close=$70.27, 
+ATR=2.3%, vol=$71.9M
+03:00:05  INFO        
+BNS.TO    did not 
+qualify for V1 or V2 
+today
+03:00:05  INFO      
+Fetching market data 
+for WCP.TO...
+03:00:18  WARNING   
+Polygon: not enough 
+bars for WCP.TO (0 
+bars)
+03:00:18  WARNING   
+Polygon failed for 
+WCP.TO, trying 
+yfinance fallback...
+03:00:21  INFO      
+yfinance OK WCP.TO: clo
+se=$14.619999885559082,
+ ATR=2.3%, vol=$75.6M
+03:00:21  INFO        
+WCP.TO    did not 
+qualify for V1 or V2 
+today
+03:00:21  INFO      
+Fetching market data 
+for TVE.TO...
+03:00:28  INFO      
+Polygon OK TVE.TO: 
+close=$24.08, 
+ATR=0.9%, vol=$0.7M
+03:00:28  INFO        
+TVE.TO    did not 
+qualify for V1 or V2 
+today
+03:00:28  INFO      
+Total signals: 0
+03:00:28  INFO      No 
+signals passed filters 
+ù done.

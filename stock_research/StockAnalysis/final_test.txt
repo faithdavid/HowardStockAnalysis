@@ -1,0 +1,137 @@
+﻿python : 04:11:03  INFO    
+  =========================
+===========================
+========
+At line:1 char:1
++ python test_pipeline.py 
+2>&1 | ForEach-Object { $_ 
+} | Out-File "fina ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo         
+     : NotSpecified: (04:  
+  11:03  INFO ...=======   
+ ========:String) [], R    
+emoteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+04:11:03  INFO      
+PIPELINE TEST ù SAMPLE 
+DATA MODE
+04:11:03  INFO      Market 
+data: SYNTHETIC (forced to 
+qualify)
+04:11:03  INFO      =======
+===========================
+==========================
+04:11:07  INFO      Repeat 
+keys detected: set()
+04:11:07  INFO      
+Same-day insider counts: 
+{'TVE.TO': 1, 'WCP.TO': 1, 
+'ATH.TO': 2}
+04:11:07  INFO        
+\u2705 TVE.TO    score= 
+69.3  rating=Good       
+variant=V2  SL=$7.76  
+TP=Hold to close
+04:11:07  INFO           
+rationale: First-time buy 
+(no repeat in 30 days) | 
+Strong insider (Director)
+04:11:07  INFO        
+\u2705 WCP.TO    score= 
+70.5  rating=Good       
+variant=V2  SL=$10.07  
+TP=Hold to close
+04:11:07  INFO           
+rationale: First-time buy 
+(no repeat in 30 days) | 
+Strong insider (President 
+& CEO)
+04:11:07  INFO        
+\u2705 ATH.TO    score= 
+70.9  rating=Good       
+variant=V2  SL=$3.71  
+TP=Hold to close
+04:11:07  INFO           
+rationale: 2 insiders 
+bought same day | 
+First-time buy (no repeat 
+in 30 days) | Strong 
+insider (CEO)
+04:11:07  INFO        
+\u2705 ATH.TO    score= 
+68.1  rating=Good       
+variant=V2  SL=$3.71  
+TP=Hold to close
+04:11:07  INFO           
+rationale: 2 insiders 
+bought same day | 
+First-time buy (no repeat 
+in 30 days)
+04:11:07  INFO      
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500\u2500\u2500\u2500
+\u2500\u2500\u2500\u2500\u2
+500\u2500
+04:11:07  INFO      Total 
+qualifying signals: 4
+04:11:07  INFO      
+--- Pushing signals to 
+Airtable: Raw Insider Data 
+---
+04:11:11  INFO      Pushed 
+TVE.TO to Airtable \u2192 
+recTKRY0ZSH9hMvZd
+04:11:12  INFO      Pushed 
+WCP.TO to Airtable \u2192 
+recIVbxVbxmX4cq3T
+04:11:13  INFO      Pushed 
+ATH.TO to Airtable \u2192 
+recW5XcVp6lfZQCka
+04:11:14  INFO      Pushed 
+ATH.TO to Airtable \u2192 
+recA8kpwpzCa9nvGR
+04:11:14  INFO      \u2705 
+Pushed 4 record(s) to 
+Airtable!
+04:11:14  INFO         
+Record 1: recTKRY0ZSH9hMvZd
+04:11:14  INFO         
+Record 2: recIVbxVbxmX4cq3T
+04:11:14  INFO         
+Record 3: recW5XcVp6lfZQCka
+04:11:14  INFO         
+Record 4: recA8kpwpzCa9nvGR
+04:11:14  INFO      
+--- Sending Zapier webhook 
+alert ---
+04:11:15  INFO      Alert 
+sent to Zapier \u2192 
+status 200
+04:11:15  INFO      \u2705 
+Zapier alert sent! Check 
+your Zapier dashboard 
+\u2192 Task History
+04:11:15  INFO      
+===========================
+===========================
+======
+04:11:15  INFO      TEST 
+COMPLETE ù check Airtable 
++ Zapier for received data
+04:11:15  INFO      =======
+===========================
+==========================

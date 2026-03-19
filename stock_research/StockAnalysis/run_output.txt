@@ -1,0 +1,71 @@
+﻿python : 2026-03-19 
+02:40:15  INFO      ===
+=======================
+=======================
+===========
+At line:1 char:1
++ python main.py 2>&1 
+| Out-File -FilePath 
+"run_output.txt" 
+-Encoding u ...
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (2026-03-19 02   
+ :4...=============    
+==:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+2026-03-19 02:40:15  
+INFO      INSIDER 
+SCANNER STARTING
+2026-03-19 02:40:15  
+INFO      =============
+=======================
+=======================
+=
+2026-03-19 02:40:15  
+INFO      Fetching 
+insider buys from 
+OpenInsider...
+2026-03-19 02:40:54  
+INFO      Fetching 
+insider buys from 
+OpenInsider...
+2026-03-19 02:41:26  
+INFO      Fetching 
+insider buys from 
+OpenInsider...
+2026-03-19 02:42:25  
+ERROR     Scraper 
+failed: 
+RetryError[<Future at 
+0x1f177ddb4d0 
+state=finished raised 
+ReadTimeout>]
+2026-03-19 02:42:27  
+ERROR     Airtable 
+error 403: {"error":{"t
+ype":"INVALID_PERMISSIO
+NS_OR_MODEL_NOT_FOUND",
+"message":"Invalid 
+permissions, or the 
+requested model was 
+not found. Check that 
+both your user and 
+your token have the 
+required permissions, 
+and that the model 
+names and/or ids are 
+correct."}}
+2026-03-19 02:42:27  
+WARNING   Could not 
+log run to Airtable: 
+403 Client Error: 
+Forbidden for url: http
+s://api.airtable.com/v0
+/appGyPlDsCOIc8lWG/Run%
+20Reports

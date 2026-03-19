@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 AIRTABLE_TOKEN   = os.getenv("AIRTABLE_TOKEN")
 AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
 TABLE_INSIDER    = os.getenv("AIRTABLE_TABLE_INSIDER", "InsiderSignals")
-TABLE_RUNS       = os.getenv("AIRTABLE_TABLE_RUNS", "PipelineRuns")
+TABLE_RUNS       = os.getenv("AIRTABLE_TABLE_RUNS", "Alert History")
 
 BASE_URL = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}"
 HEADERS  = {
@@ -60,31 +60,30 @@ def push_signal(signal: dict) -> str:
     """
     tp = signal["take_profit"] if signal["take_profit"] else "Hold to Close"
     notes_parts = [
-        signal["rationale"],
-        f"Entry: {signal['entry_price']} | Stop: {signal['stop_loss']} | TP: {tp}",
-        f"ATR%: {signal['atr_pct']} | Vol$M: {signal['dollar_volume_m']} | 52W-High: {signal['high_52w']}",
+        f"Score: {signal['total_score']}/100 ({signal['rating']}) | Variant: {signal['variant']}",
+        f"Rationale: {signal['rationale']}",
+        f"Entry: ${signal['entry_price']} | Stop Loss: ${signal['stop_loss']} | TP: {tp}",
+        f"ATR%: {signal['atr_pct']} | Vol$M: {signal['dollar_volume_m']} | 52W-High: ${signal['high_52w']}",
+        f"Sub-scores: Strength={signal['insider_strength']} | Volatility={signal['volatility_score']} | Liquidity={signal['liquidity_score']} | Timing={signal['timing_score']}",
     ]
     if signal.get("spy_gap_note"):
-        notes_parts.append(f"SPY: {signal['spy_gap_note']}")
+        notes_parts.append(f"SPY Gap: {signal['spy_gap_note']}")
     if signal.get("same_day_insiders", 1) > 1:
-        notes_parts.append(f"Same-day insiders: {signal['same_day_insiders']}")
+        notes_parts.append(f"Multiple insiders same day: {signal['same_day_insiders']}")
     if signal.get("disclaimer"):
-        notes_parts.append(signal["disclaimer"])
+        notes_parts.append(f"DISCLAIMER: {signal['disclaimer']}")
 
     fields = {
-        "Ticker":             signal["ticker"],
-        "Insider Name":       signal["insider_name"],
-        "Insider Title":      signal["title"],
-        "Trade Date":         signal["trade_date"],
-        "Filing Date":        signal["scan_date"],
-        "Shares Traded":      signal["shares"],
-        "Price Per Share":    signal["price_paid"],
-        "Value":              signal["total_value"],
-        "Is Multiple Buy":    bool(signal["is_repeat_buy"]),
-        "Buy Type":           signal["variant"],
-        "Transaction Type":   "Buy",
-        "Processing Status":  f"Score: {signal['total_score']} | {signal['rating']}",
-        "Notes":              "\n".join(notes_parts),
+        "Ticker":          signal["ticker"],
+        "Insider Name":    signal["insider_name"],
+        "Insider Title":   signal["title"],
+        "Trade Date":      signal["trade_date"],
+        "Filing Date":     signal["scan_date"],
+        "Shares Traded":   signal["shares"],
+        "Price Per Share": signal["price_paid"],
+        "Value":           signal["total_value"],
+        "Is Multiple Buy": bool(signal["same_day_insiders"] > 1),
+        "Notes":           "\n".join(notes_parts),
     }
     record = _post(TABLE_INSIDER, fields)
     record_id = record.get("id", "unknown")
@@ -105,7 +104,7 @@ def push_all_signals(signals: list[dict]) -> list[str]:
 
 
 def log_run(status: str, message: str, signals_count: int = 0):
-    """Log pipeline execution to PipelineRuns table."""
+    """Log pipeline execution to Alert History table. Silently skips if table missing."""
     if not AIRTABLE_TOKEN or not AIRTABLE_BASE_ID:
         return
     try:
@@ -116,4 +115,4 @@ def log_run(status: str, message: str, signals_count: int = 0):
             "Signals Found":  signals_count,
         })
     except Exception as e:
-        logger.warning(f"Could not log run to Airtable: {e}")
+        logger.debug(f"Run logging skipped (table may not exist yet): {e}")
