@@ -1,0 +1,194 @@
+﻿python : 2026-03-20 
+02:12:27  INFO      ===
+=======================
+=======================
+===========
+At line:1 char:1
++ python main.py 2>&1 
+| Out-File 
+"live_run.txt" 
+-Encoding utf8; 
+Get-Con ...
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (2026-03-20 02   
+ :1...=============    
+==:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+2026-03-20 02:12:27  
+INFO      INSIDER 
+SCANNER STARTING
+2026-03-20 02:12:27  
+INFO      =============
+=======================
+=======================
+=
+2026-03-20 02:12:27  
+INFO      Attempting 
+OpenInsider CSV 
+export...
+2026-03-20 02:12:45  
+WARNING   CSV endpoint 
+returned HTML ù will 
+try HTML scraper
+2026-03-20 02:12:45  
+INFO      Fetching 
+insider buys from 
+OpenInsider (HTML)...
+2026-03-20 02:13:03  
+INFO      Found 20 
+insider purchases 
+(HTML)
+2026-03-20 02:13:03  
+INFO      Scraped 20 
+trades
+2026-03-20 02:13:04  
+INFO      Polygon OK 
+GO: close=$5.94, 
+ATR=10.1%, vol=$32.6M
+2026-03-20 02:13:04  
+INFO        GO      
+score= 46.9  
+rating=Fair       
+variant=V2
+2026-03-20 02:13:16  
+INFO      Polygon OK 
+BETR: close=$28.47, 
+ATR=14.3%, vol=$7.5M
+2026-03-20 02:13:29  
+INFO      Polygon OK 
+PHR: close=$11.2, 
+ATR=5.5%, vol=$23.1M
+2026-03-20 02:13:47  
+INFO      Polygon OK 
+LOGC: close=$8.4, 
+ATR=3.3%, vol=$0.6M
+2026-03-20 02:13:54  
+INFO      Polygon OK 
+RBA: close=$97.14, 
+ATR=3.0%, vol=$92.5M
+2026-03-20 02:14:05  
+INFO      Polygon OK 
+FCNCA: close=$1776.79, 
+ATR=4.0%, vol=$181.8M
+2026-03-20 02:14:17  
+INFO      Polygon OK 
+CORT: close=$33.3, 
+ATR=4.0%, vol=$55.1M
+2026-03-20 02:14:36  
+INFO      Polygon OK 
+URG: close=$1.38, 
+ATR=9.3%, vol=$22.8M
+2026-03-20 02:14:42  
+INFO      Polygon OK 
+NBBK: close=$20.13, 
+ATR=3.6%, vol=$5.5M
+2026-03-20 02:14:54  
+INFO      Polygon OK 
+NSP: close=$23.08, 
+ATR=7.2%, vol=$32.2M
+2026-03-20 02:14:54  
+INFO        NSP     
+score= 63.3  
+rating=Good       
+variant=V2
+2026-03-20 02:15:07  
+INFO      Polygon OK 
+UUU: close=$6.4, 
+ATR=6.8%, vol=$0.4M
+2026-03-20 02:15:18  
+INFO      Polygon OK 
+ORRF: close=$34.01, 
+ATR=3.5%, vol=$5.2M
+2026-03-20 02:15:30  
+INFO      Polygon OK 
+CRM: close=$194.34, 
+ATR=4.0%, vol=$2045.4M
+2026-03-20 02:15:42  
+INFO      Polygon OK 
+ZLAB: close=$18.83, 
+ATR=4.6%, vol=$11.2M
+2026-03-20 02:15:54  
+INFO      Polygon OK 
+REYN: close=$20.95, 
+ATR=2.8%, vol=$20.3M
+2026-03-20 02:16:06  
+INFO      Polygon OK 
+CIA: close=$4.63, 
+ATR=8.7%, vol=$0.6M
+2026-03-20 02:16:18  
+INFO      Polygon OK 
+EMYB: close=$19.7, 
+ATR=2.3%, vol=$0.0M
+2026-03-20 02:16:30  
+INFO      Polygon OK 
+SBSW: close=$12.49, 
+ATR=8.3%, vol=$85.0M
+2026-03-20 02:16:30  
+INFO        SBSW    
+score= 41.6  
+rating=Fair       
+variant=V2
+2026-03-20 02:16:42  
+INFO      Polygon OK 
+NFBK: close=$13.06, 
+ATR=1.7%, vol=$4.9M
+2026-03-20 02:16:54  
+INFO      Polygon OK 
+AP: close=$6.35, 
+ATR=15.5%, vol=$2.8M
+2026-03-20 02:16:54  
+INFO      Scored 3 
+qualifying signals
+2026-03-20 02:16:57  
+INFO      Pushed GO to 
+Airtable \u2192 
+recgCJRFzwk3lcPBN
+2026-03-20 02:16:58  
+INFO      Pushed NSP 
+to Airtable \u2192 
+recm847Mzj6NQej9P
+2026-03-20 02:16:59  
+INFO      Pushed SBSW 
+to Airtable \u2192 
+recsGce4wKNWARz3Q
+2026-03-20 02:16:59  
+INFO      Pushed 3 
+records to Airtable
+2026-03-20 02:17:01  
+INFO      Alert sent 
+to Zapier \u2192 
+status 200
+2026-03-20 02:17:02  
+ERROR     Airtable 
+error 403: {"error":{"t
+ype":"INVALID_PERMISSIO
+NS_OR_MODEL_NOT_FOUND",
+"message":"Invalid 
+permissions, or the 
+requested model was 
+not found. Check that 
+both your user and 
+your token have the 
+required permissions, 
+and that the model 
+names and/or ids are 
+correct."}}
+2026-03-20 02:17:02  
+INFO      =============
+=======================
+=======================
+=
+2026-03-20 02:17:02  
+INFO      DONE ù 3 
+signals
+2026-03-20 02:17:02  
+INFO      =============
+=======================
+=======================
+=
