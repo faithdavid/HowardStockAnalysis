@@ -1,0 +1,256 @@
+﻿
+=== TABLE: Raw Insider Data ===
+  Ticker | singleLineText
+  Insider Name | singleLineText
+  Insider Title | singleLineText
+  Trade Date | date
+  Filing Date | date
+  Shares Traded | number
+  Price Per Share | currency
+  Value | number
+  Is Multiple Buy | checkbox
+  Total Value | formula
+  Buy Type | multipleSelects [Option Exercise|Private Sale|Gift|Other]
+  Notes | multilineText
+  Transaction Type | singleSelect [Buy|Selll]
+  Processing Status | singleSelect [New|Processed|Archived]
+  Market Pulls | multipleRecordLinks
+  Rating (Insider List) | multipleLookupValues
+  Close (from Market Pulls) | multipleLookupValues
+  Qualified Stock | multipleRecordLinks
+  Created At | createdTime
+  VIEWS: All Insider Data | All Recent Buys | Unprocessed | High Value Buys
+
+=== TABLE: Market Pulls ===
+  Ticker | singleLineText
+  Date | date
+  Open | currency
+  High | currency
+  Low | currency
+  Close | currency
+  Volume | number
+  ATR | currency
+  ATR% | formula
+  Daily Volume | formula
+  Avg Volume 200 | number
+  SPY Gap | percent
+  52w Low (Currency) | singleSelect [Positive|Negative|Neutral]
+  Data Source | singleSelect [Python Script|Manual|API]
+  Currency Type | singleSelect [USD|CAD]
+  Raw Insider Data | multipleRecordLinks
+  Count Insider Link | count
+  Avg Insider Rating | rollup
+  Qualified Stock | multipleRecordLinks
+  Technical Scans Under $5 CAD | multipleRecordLinks
+  Technical Scans Under $10 CAD | multipleRecordLinks
+  Technical Scans Under $20 CAD | multipleRecordLinks
+  VIEWS: All Pulls | Latest Market Data | High Volatility (ATR% > 5%) | By Ticker
+
+=== TABLE: Filtered/Qualified Insider List ===
+  Ticker | singleLineText
+  Approved for Auto-Trade | checkbox
+  Company Name | singleLineText
+  Rating | number
+  Date Qualified | date
+  Market Pulls | multipleRecordLinks
+  Rating Display | formula
+  Rating Label | formula
+  Current Price | currency
+  Entry Price | currency
+  Stop Loss | currency
+  Take Profit | currency
+  Risk Reward Ratio | formula
+  Risk Level | formula
+  ATR% | multipleLookupValues
+  Close Price | multipleLookupValues
+  Volume | currency
+  Season Variant | singleSelect [Variant 1 (Earnings)|Variant 2 (Non Earnings)|N/A|Variant 2 (Non-Earnings)]
+  Gap Note | multilineText
+  Reasons | multilineText
+  Simulation Results | multilineText
+  Insider Strength Score | number
+  Volatility Score | number
+  Liquidity Score | number
+  Timing Score | number
+  Market Flag | singleSelect [Strong Buy|Buy|Match|Caution]
+  Alert Enabled | checkbox
+  Auto-Trade Eligible | checkbox
+  Chart Image URL | url
+  Insider Data | multipleRecordLinks
+  Days Active | formula
+  TradingView Payload | multilineText
+  User Notes | multilineText
+  Alert History | multipleRecordLinks
+  Total Insider Buy Value | rollup
+  Number of Insider Buys | count
+  Created At | createdTime
+  VIEWS: All Qualified List | Daily Top Picks | High Ratings Only  | Zapier Queue | Auto-Trade Pending | By Risk Level
+
+=== TABLE: Technical Scans Under $5 CAD ===
+  Ticker | singleLineText
+  Approved for Auto Trade | checkbox
+  Company Name | singleLineText
+  MGPR score | number
+  Exchange | singleSelect [TSX|TSXV|NYSE|NASDAQ|AMEX]
+  Description | multilineText
+  Scan Date | date
+  Current Price | currency
+  52w High | currency
+  52w Low | currency
+  From 52w High | formula
+  Sector | singleSelect [Technology|Healthcare|Finance|Energy|Materials|Consumer|Industrial |Others]
+  Momentum Score | number
+  Volatility Score | number
+  Volume Score | number
+  MGPR Breakdown | multilineText
+  Entry Price | currency
+  Stop Loss | currency
+  Take Profit | currency
+  Risk/Reward Ratio | formula
+  Chart Signals | multilineText
+  RSI | number
+  MACD Signal | singleSelect [Bullish Cross|Bearish Cross|Neutral]
+  Beta | number
+  Rationale | multilineText
+  Catalysts | multilineText
+  Data Sources | multipleSelects [Yahoo Finance|TradingView|Manual Research|Financial Statements|News|Others|Polygon|News Scrape]
+  Alert Enabled | checkbox
+  Auto Trade Eligible | checkbox
+  TradingView Payload | multilineText
+  Market Pulls | multipleRecordLinks
+  Date Added | createdTime
+  Days Listed | formula
+  Chart Image | multipleAttachments
+  Notes | multilineText
+  VIEWS: Under $5 CAD Scans | Daily Top | Top Picks by MGPR | High Momentum | Zapier Queue | Bullish MACD
+
+=== TABLE: Technical Scans Under $10 CAD ===
+  Ticker | singleLineText
+  Approved for Auto Trade | checkbox
+  Company Name | singleLineText
+  MGPR score | number
+  Exchange | singleSelect [TSX|TSXV|NYSE|NASDAQ|AMEX]
+  Description | multilineText
+  Scan Date | date
+  Current Price | currency
+  52w High | currency
+  52w Low | currency
+  From 52w High | formula
+  Sector | singleSelect [Technology|Healthcare|Finance|Energy|Materials|Consumer|Industrial |Others]
+  Momentum Score | number
+  Volatility Score | number
+  Volume Score | number
+  MGPR Breakdown | multilineText
+  Entry Price | currency
+  Stop Loss | currency
+  Take Profit | currency
+  Risk/Reward Ratio | formula
+  Chart Signals | multilineText
+  RSI | number
+  MACD Signal | singleSelect [Bullish Cross|Bearish Cross|Neutral]
+  Beta | number
+  Rationale | multilineText
+  Catalysts | multilineText
+  Data Sources | multipleSelects [Yahoo Finance|TradingView|Manual Research|Financial Statements|News|Others|Polygon|News Scrape]
+  Alert Enabled | checkbox
+  Auto Trade Eligible | checkbox
+  TradingView Payload | multilineText
+  Market Pulls | multipleRecordLinks
+  Date Added | createdTime
+  Days Listed | formula
+  Chart Image | multipleAttachments
+  Notes | multilineText
+  VIEWS: Under $10 CAD Scans | Daily Top | Top Picks by MGPR | High Momentum | Zapier Queue | Bullish MACD
+
+=== TABLE: Technical Scans Under $20 CAD ===
+  Ticker | singleLineText
+  Approved for Auto Trade | checkbox
+  Company Name | singleLineText
+  MGPR score | number
+  Exchange | singleSelect [TSX|TSXV|NYSE|NASDAQ|AMEX]
+  Description | multilineText
+  Scan Date | date
+  Current Price | currency
+  52w High | currency
+  52w Low | currency
+  From 52w High | formula
+  Sector | singleSelect [Technology|Healthcare|Finance|Energy|Materials|Consumer|Industrial |Others]
+  Momentum Score | number
+  Volatility Score | number
+  Volume Score | number
+  MGPR Breakdown | multilineText
+  Entry Price | currency
+  Stop Loss | currency
+  Take Profit | currency
+  Risk/Reward Ratio | formula
+  Chart Signals | multilineText
+  RSI | number
+  MACD Signal | singleSelect [Bullish Cross|Bearish Cross|Neutral]
+  Beta | number
+  Rationale | multilineText
+  Catalysts | multilineText
+  Data Sources | multipleSelects [Yahoo Finance|TradingView|Manual Research|Financial Statements|News|Others|Polygon|News Scrape|OpenInsider]
+  Alert Enabled | checkbox
+  Auto Trade Eligible | checkbox
+  TradingView Payload | multilineText
+  Market Pulls | multipleRecordLinks
+  Date Added | createdTime
+  Days Listed | formula
+  Chart Image | multipleAttachments
+  Notes | multilineText
+  VIEWS: Under $20 CAD Scans | Daily Tops | Top Picks by MGPR | High Momentum | Alert Ready | Bullish MACD
+
+=== TABLE: Historical/Backtest ===
+  Test Name | singleLineText
+  Run Date | date
+  Module | singleSelect [Insider|Technical Under $5|Technical Under $10|Technical Under $20|Combined|Technical_Under_5|Technical_Under_10|Technical_Under_20]
+  Date Range Start | date
+  Date Range End | date
+  Total Trades | number
+  Win Rate | percent
+  Average Return | percent
+  Total Return | number
+  Sharpe Ratio | number
+  Max Drawdown | percent
+  Profit Factor | number
+  Random Control Win | percent
+  Edge Vs Random | formula
+  Edge Metrics | multilineText
+  Control Comparison | multilineText
+  Configuration Snapshot | multilineText
+  Notes | multilineText
+  Created At | createdTime
+  Tested By | singleSelect [Python Script|Manual|Hybrid]
+  Status | singleSelect [Draft|Validated|Approved|Archived]
+  VIEWS: All Test | Insider Runs | Technical Runs | Best Performers
+
+=== TABLE: Disclaimers & Best Practices ===
+  Title | singleLineText
+  Content | richText
+  Type | singleSelect [Disclaimer|Best Practice|Risk Warning|Tutorial]
+  Display Location | multipleSelects [Dashboard Header|Interface Banner|Email|Footer|All]
+  Category | singleSelect [Legal|Data|Trading Risk|Setup]
+  Date Added | createdTime
+  Last Updated | lastModifiedBy
+  VIEWS: All Disclaimers & Best Practices | Active Disclaimers
+
+=== TABLE: Configuration Settings ===
+  Setting Name | singleLineText
+  Setting Value | singleLineText
+  Data Type | singleSelect [Number|Text|Boolean]
+  Category | singleSelect [Insider Filters|Technical Filters|Risk Management|Alerts|General]
+  Module | singleSelect [Insider|Tecnical|Both|System]
+  Description | multilineText
+  Last Updated | lastModifiedTime
+  VIEWS: All Settings | By Category
+
+=== TABLE: Alert History ===
+  Alert ID | singleLineText
+  Alert Date | createdTime
+  Alert Type | singleSelect [Email|Slack]
+  Recipients | multilineText
+  Stocks Included | multipleRecordLinks
+  Status | singleSelect [Sent|Failed|Pending]
+  Error Message | multilineText
+  VIEWS: Grid view
+

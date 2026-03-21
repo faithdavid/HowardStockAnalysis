@@ -91,14 +91,14 @@ def run_pipeline(x_run_secret: str = Header(default="")):
             "signals_found": len(signals),
             "signals": [
                 {
-                    "ticker": s["ticker"],
-                    "score": s["total_score"],
-                    "rating": s["rating"],
-                    "variant": s["variant"],
-                    "entry": s["entry_price"],
-                    "stop": s["stop_loss"],
+                    "ticker":      s["ticker"],
+                    "score":       s["total_score"],
+                    "rating":      s.get("rating", "N/A"),
+                    "variant":     s.get("variant", "Technical"),
+                    "entry":       s["entry_price"],
+                    "stop":        s["stop_loss"],
                     "take_profit": s["take_profit"],
-                    "rationale": s["rationale"],
+                    "rationale":   s["rationale"],
                 }
                 for s in signals
             ],

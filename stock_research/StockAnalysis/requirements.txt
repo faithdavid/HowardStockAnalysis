@@ -9,3 +9,4 @@ yfinance>=0.2.54
 fastapi==0.135.1
 uvicorn[standard]==0.41.0
 tradingview-scraper>=0.4.20
+tradingview-screener>=2.5.0

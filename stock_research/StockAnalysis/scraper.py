@@ -27,21 +27,21 @@ HEADERS_HTTP = {
     )
 }
 
-# CSV export: last 1 day, purchases only, dollar volume >= $30M
+# CSV export: last 3 days, purchases only, dollar volume >= $10M
 OPENINSIDER_CSV_URL = (
     "http://openinsider.com/screener?"
-    "s=&o=&pl=&ph=&ll=&lh=&fd=1&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&"
-    "xp=1&vl=30&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&"
+    "s=&o=&pl=&ph=&ll=&lh=&fd=3&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&"
+    "xp=1&vl=10&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&"
     "grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&"
     "sortcol=0&cnt=100&action=1&"
     "type=csv"  # request CSV
 )
 
-# HTML fallback
+# HTML fallback: same parameters
 OPENINSIDER_HTML_URL = (
     "http://openinsider.com/screener?"
-    "s=&o=&pl=&ph=&ll=&lh=&fd=1&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&"
-    "xp=1&vl=30&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&"
+    "s=&o=&pl=&ph=&ll=&lh=&fd=3&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&"
+    "xp=1&vl=10&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&"
     "grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&"
     "sortcol=0&cnt=100&action=1"
 )

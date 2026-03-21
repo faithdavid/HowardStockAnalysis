@@ -24,7 +24,8 @@ from dotenv import load_dotenv
 from scraper import fetch_insider_buys
 from market_data import get_market_data
 from scorer import score_trade, detect_repeat_buys, count_same_day_insiders
-from airtable_push import push_all_signals, log_run
+from airtable_push import push_all_signals, log_run, log_alert, push_all_tech_signals
+from technical_scanner import get_technical_signals
 from alerts import send_alert
 
 load_dotenv()
@@ -108,11 +109,12 @@ def run():
         return
 
     # ── Step 4: Push to Airtable ─────────────────────────────────
+    raw_ids = []
     airtable_ok = True
     if os.getenv("AIRTABLE_TOKEN") and os.getenv("AIRTABLE_BASE_ID"):
         try:
-            ids = push_all_signals(signals)
-            logger.info(f"Pushed {len(ids)} records to Airtable")
+            raw_ids = push_all_signals(signals)
+            logger.info(f"Pushed {len(raw_ids)} records to Airtable")
         except Exception as e:
             logger.error(f"Airtable push failed: {e}")
             airtable_ok = False
@@ -121,17 +123,42 @@ def run():
 
     # ── Step 5: Send alert via Zapier ────────────────────────────
     alert_signals = [s for s in signals if s["total_score"] >= MIN_SCORE_FOR_ALERT]
+    alert_ok = False
     if alert_signals:
-        send_alert(alert_signals)
+        alert_ok = send_alert(alert_signals)
     else:
         logger.info(f"No signals above {MIN_SCORE_FOR_ALERT} score threshold for alert")
 
-    # ── Log run ──────────────────────────────────────────────────
-    status = "COMPLETED" if airtable_ok else "COMPLETED_WITH_ERRORS"
-    log_run(status, f"{len(signals)} signals generated", len(signals))
+    # ── Step 6: Log to Alert History in Airtable ─────────────────
+    if alert_signals:
+        log_alert(alert_signals, raw_ids, status="Sent" if alert_ok else "Failed")
 
+    # ── Step 7: Technical Scan ──────────────────────────────────
+    logger.info("Starting Technical MGPR Scans ($5, $10, $20)...")
+    tech_signals = []
+    for threshold in [5.0, 10.0, 20.0]:
+        try:
+            signals_batch = get_technical_signals(price_threshold=threshold)
+            tech_signals.extend(signals_batch)
+        except Exception as e:
+            logger.error(f"Technical scan for ${threshold} failed: {e}")
+
+    # ── Step 8: Push Technical Signals to Airtable ─────────────
+    if tech_signals:
+        try:
+            tech_ids = push_all_tech_signals(tech_signals)
+            logger.info(f"Pushed {len(tech_ids)} Technical signals to Airtable")
+        except Exception as e:
+            logger.error(f"Technical Airtable push failed: {e}")
+
+    # ── Step 9: Send Technical alerts ───────────────────────────
+    # We can send a separate alert for technical signals if any are high-scoring
+    high_tech = [s for s in tech_signals if s["total_score"] >= 70]
+    if high_tech:
+        send_alert(high_tech)  # Using same alert logic for now
+    
     logger.info("=" * 60)
-    logger.info(f"DONE — {len(signals)} signals")
+    logger.info(f"DONE — {len(signals)} Insider, {len(tech_signals)} Tech signals")
     logger.info("=" * 60)
 
     return signals
