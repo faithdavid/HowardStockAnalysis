@@ -1,0 +1,31 @@
+﻿commit 43c6d67311b33c1828a1b4e334e54eefd773fc6f
+Author: faithdavid <59588415+faithdavid@users.noreply.github.com>
+Date:   Sat Mar 21 22:24:37 2026 +0100
+
+    made very critical changes
+
+commit 1308aa573b8bb84ac5f66906e8d5278bf44f9e75
+Author: faithdavid <59588415+faithdavid@users.noreply.github.com>
+Date:   Sat Mar 21 21:33:46 2026 +0100
+
+    feat: Implement initial stock analysis pipeline with data scraping, technical scanning, Airtable integration, and automated daily execution via GitHub Actions and Railway.
+
+commit 115ae04e8311debeaf54bb6feba62f110c9fc5d4
+Author: faithdavid <59588415+faithdavid@users.noreply.github.com>
+Date:   Fri Mar 20 03:32:25 2026 +0100
+
+    running well
+
+commit 94489d321abfdc0cf001f37aa89e4168a5fed34d
+Author: faithdavid <59588415+faithdavid@users.noreply.github.com>
+Date:   Thu Mar 19 04:31:00 2026 +0100
+
+    alot has been updated
+    
+    alot has been updated
+
+commit 7dc290bb4ce653f8b13f35a7bac5ba54b0a4522e
+Author: adenijiphilip324-cmd <adenijiphilip324@gmail.com>
+Date:   Mon Mar 16 21:27:45 2026 +0000
+
+    this is working for scraping signals live

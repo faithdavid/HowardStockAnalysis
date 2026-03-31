@@ -1,11 +1,13 @@
 """
 airtable_push.py
 ----------------
-Pushes scored insider signals to three Airtable tables:
+Pushes scored insider signals to Airtable tables:
   - Raw Insider Data            : one row per trade scraped (all signals)
   - Filtered/Qualified Insider List : top signals above MIN_SCORE threshold
   - Market Pulls                : OHLCV / ATR market data per ticker
   - Alert History               : log of every pipeline run
+  - Technical Scans             : MGPR-scored Canadian stocks (Under $5/$10/$20)
+  - Historical/Backtest         : aggregate performance stats for strategy backtests
 """
 
 import logging
@@ -28,6 +30,7 @@ TABLE_ALERTS    = "Alert History"
 TABLE_TECH_5    = "Technical Scans Under $5 CAD"
 TABLE_TECH_10   = "Technical Scans Under $10 CAD"
 TABLE_TECH_20   = "Technical Scans Under $20 CAD"
+TABLE_BACKTEST  = "Historical/Backtest"
 
 # Only push to Qualified List if score >= this
 MIN_QUALIFY_SCORE = 60
@@ -302,3 +305,83 @@ def push_all_signals(signals: list[dict]) -> list[str]:
 def log_run(status: str, message: str, signals_count: int = 0):
     """Legacy wrapper — silently skips."""
     logger.debug(f"log_run called: {status} | {message} | {signals_count} signals")
+
+
+# ── Historical / Backtest ─────────────────────────────────────────────────────
+
+def push_backtest_result(metrics: dict) -> str:
+    """
+    Push a single backtest summary to the 'Historical/Backtest' table.
+
+    Expected keys in `metrics`:
+      Required:
+        test_name       (str)  – e.g. "Insider Run – Q1 2025"
+        module          (str)  – e.g. "Insider" | "Technical_Under_5" | ...
+        date_range_start (str) – ISO date, e.g. "2025-01-01"
+        date_range_end   (str) – ISO date, e.g. "2025-03-31"
+        total_trades    (int)
+        win_rate        (float) – percentage, e.g. 62.5
+        average_return  (float) – percentage per trade, e.g. 4.2
+        total_return    (float) – cumulative %, e.g. 38.0
+
+      Optional:
+        sharpe_ratio         (float)
+        max_drawdown         (float) – percentage, e.g. -12.3
+        profit_factor        (float)
+        random_control_win   (float) – random baseline win rate %
+        edge_vs_random       (float) – percentage point edge over random
+        edge_metrics         (str)   – free-text or JSON summary
+        control_comparison   (str)   – free-text comparison narrative
+        configuration_snapshot (str) – JSON or TOML string of settings used
+        notes                (str)
+        status               (str)   – e.g. "Draft" | "Complete" | "Archived"
+        tested_by            (str)   – your name or "AutoPipeline"
+
+    Returns:
+        The Airtable record ID of the newly created backtest record.
+    """
+    run_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    fields = {
+        "Test Name":    metrics["test_name"],
+        "Run Date":     run_date,
+        "Module":       metrics["module"],
+        "Date Range Start": metrics["date_range_start"],
+        "Date Range End":   metrics["date_range_end"],
+        "Total Trades": int(metrics["total_trades"]),
+        "Win Rate":     float(metrics["win_rate"]),
+        "Average Return": float(metrics["average_return"]),
+        "Total Return": float(metrics["total_return"]),
+    }
+
+    # Optional fields — only included if present
+    optional_floats = {
+        "sharpe_ratio":       "Sharpe Ratio",
+        "max_drawdown":       "Max Drawdown",
+        "profit_factor":      "Profit Factor",
+        "random_control_win": "Random Control Win",
+        "edge_vs_random":     "Edge Vs Random",
+    }
+    for key, col in optional_floats.items():
+        if metrics.get(key) is not None:
+            fields[col] = float(metrics[key])
+
+    optional_strings = {
+        "edge_metrics":           "Edge Metrics",
+        "control_comparison":     "Control Comparison",
+        "configuration_snapshot": "Configuration Snapshot",
+        "notes":                  "Notes",
+        "status":                 "Status",
+        "tested_by":              "Tested By",
+    }
+    for key, col in optional_strings.items():
+        if metrics.get(key):
+            fields[col] = str(metrics[key])
+
+    record = _post(TABLE_BACKTEST, fields)
+    record_id = record.get("id", "unknown")
+    logger.info(
+        f"Backtest result logged → Historical/Backtest [{record_id}] "
+        f"({metrics['module']} | {metrics['date_range_start']} → {metrics['date_range_end']})"
+    )
+    return record_id

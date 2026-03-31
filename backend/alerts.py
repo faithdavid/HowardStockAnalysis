@@ -77,6 +77,9 @@ def build_email_html(signals: list[dict]) -> str:
             <div style="background:#fff3e0;border-left:4px solid #ff9800;padding:15px;margin-top:20px;font-size:12px;color:#5d4037;">
                 <b>Disclaimer:</b> {DISCLAIMER}
             </div>
+            <div style="background:#e8f4f8;border-left:4px solid #0288d1;padding:15px;margin-top:10px;font-size:13px;color:#01579b;">
+                <strong>💎 Early Signal:</strong> If you find this valuable, please consider sending any amount for donation to support this work!
+            </div>
         </div>
     </div>
     """
@@ -109,6 +112,7 @@ def build_slack_message(signals: list[dict]) -> str:
         lines.append(f"\n_...and {len(signals) - 5} more on your Airtable dashboard._")
 
     lines.append(f"\n_{DISCLAIMER}_")
+    lines.append("\n> 💎 *Early Signal:* If you find this valuable, please consider sending any amount for donation to support this work!")
     return "\n".join(lines)
 
 

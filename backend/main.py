@@ -38,7 +38,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Only push signals above this score to Airtable / alerts
-MIN_SCORE_FOR_ALERT = float(os.getenv("MIN_SCORE_FOR_ALERT", "40"))
+MIN_SCORE_FOR_ALERT = float(os.getenv("MIN_SCORE_FOR_ALERT") or "85")
 
 
 def run():
@@ -59,7 +59,6 @@ def run():
         msg = "No insider buys found today"
         logger.info(msg)
         log_run("COMPLETED", msg, 0)
-        return
 
     logger.info(f"Scraped {len(trades)} trades")
 
@@ -106,12 +105,11 @@ def run():
         msg = "No signals passed filters today"
         logger.info(msg)
         log_run("COMPLETED", msg, 0)
-        return
 
     # ── Step 4: Push to Airtable ─────────────────────────────────
     raw_ids = []
     airtable_ok = True
-    if os.getenv("AIRTABLE_TOKEN") and os.getenv("AIRTABLE_BASE_ID"):
+    if signals and os.getenv("AIRTABLE_TOKEN") and os.getenv("AIRTABLE_BASE_ID"):
         try:
             raw_ids = push_all_signals(signals)
             logger.info(f"Pushed {len(raw_ids)} records to Airtable")
@@ -160,7 +158,7 @@ def run():
 
     # ── Step 9: Send Technical alerts ───────────────────────────
     # We can send a separate alert for technical signals if any are high-scoring
-    high_tech = [s for s in tech_signals if s["total_score"] >= 70]
+    high_tech = [s for s in tech_signals if s["total_score"] >= 85]
     if high_tech:
         send_alert(high_tech)  # Using same alert logic for now
     

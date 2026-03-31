@@ -5,6 +5,7 @@ Scans TSX/TSXV stocks under $5, $10, and $20 for short-term upside.
 Uses TradingView Screener API for technical indicators and MGPR scoring.
 """
 
+import os
 import logging
 from datetime import date
 from tradingview_screener import Query, Column
@@ -12,8 +13,8 @@ from tradingview_screener import Query, Column
 logger = logging.getLogger(__name__)
 
 # MGPR Scoring Thresholds
-MIN_SCAN_SCORE = 50   # Minimum score to be considered for Airtable
-MIN_VOLUME_SHARES = 50000
+MIN_SCAN_SCORE = float(os.getenv("MIN_SCAN_SCORE") or "50")   # Minimum score to be considered for Airtable
+MIN_VOLUME_SHARES = int(os.getenv("MIN_VOLUME_SHARES") or "50000")
 
 def get_technical_signals(price_threshold: float = 20.0) -> list[dict]:
     """

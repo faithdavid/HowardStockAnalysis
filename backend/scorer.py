@@ -4,26 +4,26 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-# ── Strategy constants (from the book) ──────────────────────────────────────
+import os
 
 # Variant 1: earnings season only (Feb, May, Aug, Nov)
 #   ATR >= 3.5%, volume $30M-$100M
 #   SL = 50% ATR, TP = 100% ATR
 EARNINGS_MONTHS = {2, 5, 8, 11}
-V1_ATR_MIN = 3.5
-V1_VOL_MIN_M = 30    # $30M
-V1_VOL_MAX_M = 100   # $100M
+V1_ATR_MIN = float(os.getenv("V1_ATR_MIN") or "3.5")
+V1_VOL_MIN_M = float(os.getenv("V1_VOL_MIN_M") or "30")    # $30M
+V1_VOL_MAX_M = float(os.getenv("V1_VOL_MAX_M") or "100")   # $100M
 
 # Variant 2: year-round
 #   ATR 7%-20%, volume $30M-$10B
 #   SL = 150% ATR, TP = None (hold to close)
-V2_ATR_MIN = 7.0
-V2_ATR_MAX = 20.0
-V2_VOL_MIN_M = 30
-V2_VOL_MAX_M = 10_000  # $10B
+V2_ATR_MIN = float(os.getenv("V2_ATR_MIN") or "7.0")
+V2_ATR_MAX = float(os.getenv("V2_ATR_MAX") or "20.0")
+V2_VOL_MIN_M = float(os.getenv("V2_VOL_MIN_M") or "30")
+V2_VOL_MAX_M = float(os.getenv("V2_VOL_MAX_M") or "10000")  # $10B
 
 # Repeat buy window (ignore if same insider bought within 30 days)
-REPEAT_BUY_DAYS = 30
+REPEAT_BUY_DAYS = int(os.getenv("REPEAT_BUY_DAYS") or "30")
 
 # SPY gap threshold — if SPY gap > 0.5% up or down, mark as caution
 SPY_GAP_THRESHOLD = 0.5
