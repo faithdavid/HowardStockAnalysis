@@ -193,7 +193,7 @@ const settingsData = ref({
   REPEAT_BUY_DAYS: '30'
 })
 
-const API_BASE = 'http://127.0.0.1:8000'
+const API_BASE = useRuntimeConfig().public.apiBase
 const RUN_SECRET = '' 
 
 const loadingPhases = [
