@@ -146,13 +146,17 @@ def get_spy_gap(on_date: date | None = None) -> float:
                     break
             
             if found_idx <= 0: return 0.0
-            prev_close = float(df.iloc[found_idx - 1]["Close"])
-            open_price = float(df.iloc[found_idx]["Open"])
+            prev_close_val = df.iloc[found_idx - 1]["Close"]
+            open_price_val = df.iloc[found_idx]["Open"]
+            prev_close = float(prev_close_val.iloc[0]) if hasattr(prev_close_val, 'iloc') else float(prev_close_val)
+            open_price = float(open_price_val.iloc[0]) if hasattr(open_price_val, 'iloc') else float(open_price_val)
         else:
             df = yf.download(ticker, period="5d", progress=False)
             if df.empty or len(df) < 2: return 0.0
-            prev_close = float(df.iloc[-2]["Close"])
-            open_price = float(df.iloc[-1]["Open"])
+            prev_close_val = df.iloc[-2]["Close"]
+            open_price_val = df.iloc[-1]["Open"]
+            prev_close = float(prev_close_val.iloc[0]) if hasattr(prev_close_val, 'iloc') else float(prev_close_val)
+            open_price = float(open_price_val.iloc[0]) if hasattr(open_price_val, 'iloc') else float(open_price_val)
 
         gap = ((open_price - prev_close) / prev_close) * 100
         logger.info(f"SPY Gap OK: {gap:.2f}%")

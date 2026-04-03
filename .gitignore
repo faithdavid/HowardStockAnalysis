@@ -1,3 +1,35 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Environment secrets — NEVER commit these
+.env
+.env.*
+!.env.example
+
+# Test/debug output files
+backend/test_results.txt
+backend/test_out*.txt
+backend/live_*.txt
+backend/final_*.txt
+backend/run_output.txt
+backend/run_history.json
+backend/__pycache__/
+
+# Node / Nuxt frontend
+frontend/node_modules/
+frontend/.nuxt/
+frontend/.output/
+
+# OS
+.DS_Store
+Thumbs.db
