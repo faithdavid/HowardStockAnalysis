@@ -18,6 +18,7 @@ COPY . .
 
 # Set environment variable for the port (Railway will override this)
 ENV PORT=8000
+ENV PYTHONUNBUFFERED=1
 
 # Start the uvicorn server
 # We use sh -c to allow environment variable expansion of $PORT

@@ -179,42 +179,58 @@ def automated_pipeline_run():
     asyncio.create_task(execute_pipeline_core(is_auto=True))
 async def refresh_spy_gap():
     global _cached_spy_gap
-    logger.info("Refreshing cached SPY gap...")
-    _cached_spy_gap = await run_in_threadpool(get_spy_gap)
-    logger.info(f"Cached SPY gap updated: {_cached_spy_gap:+.2f}%")
+    try:
+        logger.info("Lifespan: Refreshing cached SPY gap...")
+        # Use a timeout of 10s for the threadpool task if possible, 
+        # but run_in_threadpool doesn't support timeout directly.
+        # get_spy_gap itself should handle its own timeouts.
+        _cached_spy_gap = await run_in_threadpool(get_spy_gap)
+        logger.info(f"Lifespan: Cached SPY gap updated: {_cached_spy_gap:+.2f}%")
+    except Exception as e:
+        logger.error(f"Lifespan: Failed to refresh SPY gap: {e}")
 
 async def automated_backtest_run():
-    # Refresh gap also during backtest runs
-    await refresh_spy_gap()
-    await execute_health_check_core(lookback_days=90)
+    try:
+        logger.info("Lifespan: Starting automated backtest run...")
+        await refresh_spy_gap()
+        await execute_health_check_core(lookback_days=90)
+        logger.info("Lifespan: Automated backtest run complete.")
+    except Exception as e:
+        logger.error(f"Lifespan: Automated backtest run failed: {e}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Insider Scanner server starting up")
+    logger.info("INIT: Insider Scanner server starting up (lifespan start)")
     
-    # Schedule the job to run every Monday-Friday at 7:00 AM EST (New York)
-    scheduler.add_job(
-        automated_pipeline_run, 
-        CronTrigger(day_of_week='mon-fri', hour=7, minute=0, timezone='America/New_York')
-    )
-    
-    # Schedule strategy health-check backtests every 3 days
-    # This keeps your Historical/Backtest Airtable table updated automatically
-    scheduler.add_job(
-        automated_backtest_run,
-        IntervalTrigger(days=3)
-    )
-    
-    # Initial gap fetch
-    asyncio.create_task(refresh_spy_gap())
-    
-    scheduler.start()
-    logger.info("APScheduler started (cron: Mon-Fri 7:00 AM EST, interval: every 3 days)")
-    
+    try:
+        # Schedule the job to run every Monday-Friday at 7:00 AM EST (New York)
+        scheduler.add_job(
+            automated_pipeline_run, 
+            CronTrigger(day_of_week='mon-fri', hour=7, minute=0, timezone='America/New_York')
+        )
+        
+        # Schedule strategy health-check backtests every 3 days
+        scheduler.add_job(
+            automated_backtest_run,
+            IntervalTrigger(days=3)
+        )
+        
+        # Initial gap fetch - Non-blocking to ensure fast startup
+        logger.info("INIT: Queuing initial SPY gap fetch...")
+        asyncio.create_task(refresh_spy_gap())
+        
+        scheduler.start()
+        logger.info("INIT: APScheduler started (cron: Mon-Fri 7:00 AM EST, interval: every 3 days)")
+        
+    except Exception as e:
+        logger.exception("INIT: Error during lifespan startup sequence")
+
+    logger.info("INIT: Application initialization complete, yielding to web server.")
     yield
     
+    logger.info("SHUTDOWN: Insider Scanner server shutting down")
     scheduler.shutdown()
-    logger.info("Insider Scanner server shutting down")
+    logger.info("SHUTDOWN: Scheduler stopped.")
 
 app = FastAPI(
     title="Insider Scanner",
@@ -236,11 +252,14 @@ import dotenv
 
 @app.get("/")
 def health():
+    # Simplest possible health check to appease Railway
+    logger.info("HEALTHCHECK hit at /")
     return {
         "status": "ok",
         "service": "insider-scanner",
         "last_run": _last_run,
-        "spy_gap": _cached_spy_gap
+        "spy_gap": _cached_spy_gap,
+        "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
 
