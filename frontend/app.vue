@@ -217,7 +217,7 @@ const settingsData = ref({
 })
 
 const API_BASE = useRuntimeConfig().public.apiBase
-const RUN_SECRET = '' 
+const RUN_SECRET = useRuntimeConfig().public.runSecret
 
 const loadingPhases = [
   "Connecting to Exchange servers...",
