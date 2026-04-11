@@ -341,7 +341,7 @@ const triggerHealthCheck = async () => {
     // Send lookback_days as query param
     const res = await fetch(`${API_BASE}/health-check?lookback_days=${lookbackDays.value}`, {
       method: 'POST',
-      headers: { 'x-run-secret': RUN_SECRET }
+      headers: { 'X-Run-Secret': RUN_SECRET }
     })
     if (res.ok) {
       pollHealthStatus()
