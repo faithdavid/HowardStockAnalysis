@@ -287,7 +287,7 @@ const triggerRun = async () => {
   try {
     const res = await fetch(`${API_BASE}/run`, {
       method: 'POST',
-      headers: { 'x-run-secret': RUN_SECRET }
+      headers: { 'X-Run-Secret': RUN_SECRET }
     })
     if (res.ok) {
       // It immediately returns started. Now we poll for logs.

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000',
-      runSecret: process.env.NUXT_PUBLIC_RUN_SECRET || ''
+      runSecret: process.env.NUXT_PUBLIC_RUN_SECRET || process.env.RUN_SECRET || ''
     }
   }
 })
