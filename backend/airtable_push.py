@@ -370,14 +370,23 @@ def push_backtest_result(metrics: dict) -> str:
         "edge_metrics":           "Edge Metrics",
         "control_comparison":     "Control Comparison",
         "configuration_snapshot": "Configuration Snapshot",
-        "notes":                  "Notes",
         "status":                 "Status",
         "tested_by":              "Tested By",
-        "simulation_results":     "Simulation Results",
     }
     for key, col in optional_strings.items():
         if metrics.get(key):
             fields[col] = str(metrics[key])
+
+    # Handle Simulation Results + Notes combination
+    sim_log = metrics.get("simulation_results", "")
+    notes = metrics.get("notes", "")
+    if sim_log:
+        if notes:
+            fields["Notes"] = f"{notes}\n\n---\n{sim_log}"
+        else:
+            fields["Notes"] = sim_log
+    elif notes:
+         fields["Notes"] = notes
 
     record = _post(TABLE_BACKTEST, fields)
     record_id = record.get("id", "unknown")
