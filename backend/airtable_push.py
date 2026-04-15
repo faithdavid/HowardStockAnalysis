@@ -373,6 +373,7 @@ def push_backtest_result(metrics: dict) -> str:
         "notes":                  "Notes",
         "status":                 "Status",
         "tested_by":              "Tested By",
+        "simulation_results":     "Simulation Results",
     }
     for key, col in optional_strings.items():
         if metrics.get(key):
