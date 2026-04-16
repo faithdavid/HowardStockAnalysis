@@ -10,6 +10,7 @@ Pushes scored insider signals to Airtable tables:
   - Historical/Backtest         : aggregate performance stats for strategy backtests
 """
 
+import json
 import logging
 import os
 import requests
@@ -349,9 +350,9 @@ def push_backtest_result(metrics: dict) -> str:
         "Date Range Start": metrics["date_range_start"],
         "Date Range End":   metrics["date_range_end"],
         "Total Trades": int(metrics["total_trades"]),
-        "Win Rate":     float(metrics["win_rate"]),
-        "Average Return": float(metrics["average_return"]),
-        "Total Return": float(metrics["total_return"]),
+        "Win Rate":     float(metrics["win_rate"]) / 100.0, # Percent field (decimal)
+        "Average Return": float(metrics["average_return"]),  # Number field
+        "Total Return": float(metrics["total_return"]),      # Number field
     }
 
     # Optional fields — only included if present
@@ -360,7 +361,6 @@ def push_backtest_result(metrics: dict) -> str:
         "max_drawdown":       "Max Drawdown",
         "profit_factor":      "Profit Factor",
         "random_control_win": "Random Control Win",
-        "edge_vs_random":     "Edge Vs Random",
     }
     for key, col in optional_floats.items():
         if metrics.get(key) is not None:
@@ -370,13 +370,21 @@ def push_backtest_result(metrics: dict) -> str:
         "edge_metrics":           "Edge Metrics",
         "control_comparison":     "Control Comparison",
         "configuration_snapshot": "Configuration Snapshot",
-        "notes":                  "Notes",
-        "status":                 "Status",
-        "tested_by":              "Tested By",
     }
     for key, col in optional_strings.items():
         if metrics.get(key):
             fields[col] = str(metrics[key])
+
+    # Handle Simulation Results + Notes combination
+    sim_log = metrics.get("simulation_results", "")
+    notes = metrics.get("notes", "")
+    if sim_log:
+        if notes:
+            fields["Notes"] = f"{notes}\n\n---\n{sim_log}"
+        else:
+            fields["Notes"] = sim_log
+    elif notes:
+         fields["Notes"] = notes
 
     record = _post(TABLE_BACKTEST, fields)
     record_id = record.get("id", "unknown")

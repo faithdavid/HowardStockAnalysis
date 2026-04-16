@@ -159,6 +159,29 @@ def simulate_trade(
 
 # ── Performance Metrics ───────────────────────────────────────────────────────
 
+def format_results_table(results: list[dict]) -> str:
+    """Format individual trade results into a Markdown table string."""
+    if not results:
+        return "No trades recorded."
+    
+    header = "| Ticker | Outcome | Return % | Exit Date | Reason | Score |\n"
+    separator = "|--------|---------|----------|-----------|--------|-------|\n"
+    rows = []
+    for r in results:
+        ticker      = r.get("ticker", "N/A")
+        outcome     = r.get("outcome", "N/A")
+        return_pct  = r.get("return_pct", 0.0)
+        exit_date   = r.get("exit_date", "N/A")
+        exit_reason = r.get("exit_reason", "N/A")
+        score       = r.get("score", 0.0)
+        
+        rows.append(
+            f"| {ticker:8} | {outcome:7} | {return_pct:+8.2f}% | "
+            f"{exit_date} | {exit_reason:12} | {score:5.1f} |"
+        )
+    return header + separator + "\n".join(rows)
+
+
 def compute_metrics(results: list[dict], module: str, start: str, end: str) -> dict:
     """
     Given a list of trade result dicts (each with return_pct, outcome),
@@ -216,7 +239,7 @@ def compute_metrics(results: list[dict], module: str, start: str, end: str) -> d
     ]
 
     return {
-        "test_name":        f"{module} Backtest {start} → {end}",
+        "test_name":        f"{module} Backtest {start} -> {end}",
         "module":           module,
         "date_range_start": start,
         "date_range_end":   end,
@@ -493,6 +516,9 @@ def run_backtest(module: str, start_str: str, end_str: str):
 
     # ── 2. Compute performance metrics ────────────────────────────
     metrics = compute_metrics(results, module, start_str, end_str)
+
+    # NEW: Add individual results log
+    metrics["simulation_results"] = format_results_table(results)
 
     # ── 3. Random control baseline ────────────────────────────────
     tickers = list({r["ticker"] for r in results})
