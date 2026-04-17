@@ -253,14 +253,17 @@ import dotenv
 @app.get("/")
 def health():
     # Simplest possible health check to appease Railway
-    logger.info("HEALTHCHECK hit at /")
+    # We remove internal logs from here to keep it ultra-lite
     return {
         "status": "ok",
         "service": "insider-scanner",
-        "last_run": _last_run,
-        "spy_gap": _cached_spy_gap,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
+
+@app.get("/health")
+def health_v2():
+    # Dedicated health endpoint for monitoring services
+    return {"status": "healthy", "uptime": "connected"}
 
 
 # Security mapping: only allow modification of non-sensitive strategy settings

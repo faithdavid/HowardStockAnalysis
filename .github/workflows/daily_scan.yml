@@ -1,6 +1,8 @@
 name: Daily Stock Scan
 
 on:
+  push:
+    branches: [ main ]
   schedule:
     - cron: '0 14 * * 1-5' # 9:00 AM EST (14:00 UTC) Mon-Fri
   workflow_dispatch:      # Allow manual trigger
@@ -20,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd stock_research/StockAnalysis
+          cd backend
           pip install -r requirements.txt
 
       - name: Run Pipeline
@@ -33,5 +35,5 @@ jobs:
           MIN_SCORE_FOR_ALERT: 40
           USE_ZAPIER:         true
         run: |
-          cd stock_research/StockAnalysis
+          cd backend
           python main.py

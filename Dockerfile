@@ -17,7 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 
 # Ensure the app uses the dynamic port provided by Railway
-ENV PORT=8000
 ENV PYTHONUNBUFFERED=1
 
 # Start the uvicorn server using the port variable
