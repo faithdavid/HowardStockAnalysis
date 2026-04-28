@@ -23,18 +23,19 @@ logger = logging.getLogger(__name__)
 AIRTABLE_TOKEN   = os.getenv("AIRTABLE_TOKEN")
 AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
 
-# Table names (exactly as they appear in Airtable)
-TABLE_RAW       = "Raw Insider Data"
-TABLE_QUALIFIED = "Filtered/Qualified Insider List"
-TABLE_MARKET    = "Market Pulls"
-TABLE_ALERTS    = "Alert History"
-TABLE_TECH_5    = "Technical Scans Under $5 CAD"
-TABLE_TECH_10   = "Technical Scans Under $10 CAD"
-TABLE_TECH_20   = "Technical Scans Under $20 CAD"
-TABLE_BACKTEST  = "Historical/Backtest"
+# Table names (can be overridden in .env via AIRTABLE_TABLE_* vars)
+TABLE_RAW       = os.getenv("AIRTABLE_TABLE_INSIDER", "Raw Insider Data")
+TABLE_QUALIFIED = os.getenv("AIRTABLE_TABLE_QUALIFIED", "Filtered/Qualified Insider List")
+TABLE_MARKET    = os.getenv("AIRTABLE_TABLE_MARKET", "Market Pulls")
+TABLE_ALERTS    = os.getenv("AIRTABLE_TABLE_ALERTS", "Alert History")
+TABLE_TECH_5    = os.getenv("AIRTABLE_TABLE_TECH_5", "Technical Scans Under $5 CAD")
+TABLE_TECH_10   = os.getenv("AIRTABLE_TABLE_TECH_10", "Technical Scans Under $10 CAD")
+TABLE_TECH_20   = os.getenv("AIRTABLE_TABLE_TECH_20", "Technical Scans Under $20 CAD")
+TABLE_BACKTEST  = os.getenv("AIRTABLE_TABLE_BACKTEST", "Historical/Backtest")
 
-# Only push to Qualified List if score >= this
-MIN_QUALIFY_SCORE = 60
+# Score thresholds for different tables
+MIN_SCORE_FOR_RAW      = 70   # Raw Insider Data (all scraped trades)
+MIN_QUALIFY_SCORE      = 85   # Filtered/Qualified Insider List (high-quality only)
 
 BASE_URL = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}"
 HEADERS  = {
@@ -267,7 +268,7 @@ def push_all_tech_signals(signals: list[dict]) -> list[str]:
 def push_all_signals(signals: list[dict]) -> list[str]:
     """
     Full push pipeline:
-      1. Every signal → Raw Insider Data (Processing Status = New)
+      1. Signals with score >= MIN_SCORE_FOR_RAW → Raw Insider Data (Processing Status = New)
       2. Signals with score >= MIN_QUALIFY_SCORE → Filtered/Qualified Insider List
       3. Market data → Market Pulls
     Returns list of Raw Insider Data record IDs.
@@ -275,9 +276,14 @@ def push_all_signals(signals: list[dict]) -> list[str]:
     raw_ids = []
 
     for signal in signals:
+        # Skip signals below minimum raw score threshold
+        if signal["total_score"] < MIN_SCORE_FOR_RAW:
+            logger.debug(f"Skipping {signal.get('ticker')} — score {signal['total_score']} below MIN_SCORE_FOR_RAW ({MIN_SCORE_FOR_RAW})")
+            continue
+
         raw_id = None
 
-        # Step 1: Raw Insider Data (always)
+        # Step 1: Raw Insider Data (score >= 70)
         try:
             raw_id = push_raw_signal(signal)
             raw_ids.append(raw_id)
@@ -285,7 +291,7 @@ def push_all_signals(signals: list[dict]) -> list[str]:
             logger.error(f"Failed to push raw signal for {signal.get('ticker')}: {e}")
             continue
 
-        # Step 2: Qualified List (high-scoring only)
+        # Step 2: Qualified List (score >= 85)
         if signal["total_score"] >= MIN_QUALIFY_SCORE:
             try:
                 push_qualified_signal(signal, raw_id)

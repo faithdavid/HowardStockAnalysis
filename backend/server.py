@@ -201,29 +201,37 @@ async def automated_backtest_run():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("INIT: Insider Scanner server starting up (lifespan start)")
+    logger.info(f"INIT: System timezone: {os.getenv('TZ', 'Not configured')}")
     
     try:
         # Schedule the job to run every Monday-Friday at 7:00 AM EST (New York)
         scheduler.add_job(
             automated_pipeline_run, 
-            CronTrigger(day_of_week='mon-fri', hour=7, minute=0, timezone='America/New_York')
+            CronTrigger(day_of_week='mon-fri', hour=7, minute=0, timezone='America/New_York'),
+            id='daily_pipeline',
+            replace_existing=True
         )
+        logger.info("INIT: Scheduled daily pipeline for Mon-Fri 7:00 AM EST")
         
         # Schedule strategy health-check backtests every 3 days
         scheduler.add_job(
             automated_backtest_run,
-            IntervalTrigger(days=3)
+            IntervalTrigger(days=3),
+            id='health_check',
+            replace_existing=True
         )
+        logger.info("INIT: Scheduled health checks every 3 days")
         
         # Initial gap fetch - Non-blocking to ensure fast startup
         logger.info("INIT: Queuing initial SPY gap fetch...")
         asyncio.create_task(refresh_spy_gap())
         
         scheduler.start()
-        logger.info("INIT: APScheduler started (cron: Mon-Fri 7:00 AM EST, interval: every 3 days)")
+        logger.info("INIT: APScheduler started successfully")
+        logger.info(f"INIT: Next scheduled run: {scheduler.get_jobs()[0].next_run_time if scheduler.get_jobs() else 'No jobs'}")
         
     except Exception as e:
-        logger.exception("INIT: Error during lifespan startup sequence")
+        logger.error(f"INIT: Scheduler startup failed: {e}", exc_info=True)
 
     logger.info("INIT: Application initialization complete, yielding to web server.")
     yield
@@ -264,6 +272,36 @@ def health():
 def health_v2():
     # Dedicated health endpoint for monitoring services
     return {"status": "healthy", "uptime": "connected"}
+
+
+@app.get("/scheduler/status")
+def scheduler_status():
+    """Check if the automation scheduler is running and when it will next trigger."""
+    try:
+        jobs = scheduler.get_jobs()
+        job_list = []
+        for job in jobs:
+            next_run = job.next_run_time.isoformat() if job.next_run_time else "Never"
+            job_list.append({
+                "id": job.id,
+                "name": job.name or job.func.__name__,
+                "next_run": next_run,
+                "trigger": str(job.trigger)
+            })
+        
+        return {
+            "scheduler_running": scheduler.running,
+            "jobs_count": len(jobs),
+            "jobs": job_list,
+            "server_time_utc": datetime.now(timezone.utc).isoformat(),
+            "timezone_configured": os.getenv("TZ", "Not set"),
+        }
+    except Exception as e:
+        return {
+            "scheduler_running": False,
+            "error": str(e),
+            "server_time_utc": datetime.now(timezone.utc).isoformat()
+        }
 
 
 # Security mapping: only allow modification of non-sensitive strategy settings
