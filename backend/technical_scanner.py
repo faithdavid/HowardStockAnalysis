@@ -13,7 +13,7 @@ from tradingview_screener import Query, Column
 logger = logging.getLogger(__name__)
 
 # MGPR Scoring Thresholds
-MIN_SCAN_SCORE = float(os.getenv("MIN_SCAN_SCORE") or "50")   # Minimum score to be considered for Airtable
+MIN_SCAN_SCORE = float(os.getenv("MIN_SCAN_SCORE") or "85")   # Minimum score to be considered for Airtable (technical scans)
 MIN_VOLUME_SHARES = int(os.getenv("MIN_VOLUME_SHARES") or "50000")
 
 def get_technical_signals(price_threshold: float = 20.0) -> list[dict]:

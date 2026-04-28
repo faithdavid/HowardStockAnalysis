@@ -82,13 +82,15 @@ print("TEST 3: Airtable Connectivity")
 print("=" * 60)
 AIRTABLE_TOKEN = os.getenv("AIRTABLE_TOKEN", "")
 AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID", "")
+AIRTABLE_TABLE_INSIDER = os.getenv("AIRTABLE_TABLE_INSIDER", "Raw Insider Data")
 
 if not AIRTABLE_TOKEN or not AIRTABLE_BASE_ID:
     print(f"  {FAIL} Missing AIRTABLE_TOKEN or AIRTABLE_BASE_ID in .env")
     results["airtable_read"] = FAIL
 else:
     # Read test
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Raw%20Insider%20Data?maxRecords=1"
+    table_name = requests.utils.quote(AIRTABLE_TABLE_INSIDER, safe='')
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{table_name}?maxRecords=1"
     headers = {"Authorization": f"Bearer {AIRTABLE_TOKEN}"}
     try:
         r = requests.get(url, headers=headers, timeout=10)
