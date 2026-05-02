@@ -23,7 +23,7 @@ import sys
 import logging
 import asyncio
 from dotenv import load_dotenv
-import json
+import sqlite3
 from contextlib import asynccontextmanager
 from collections import deque
 from datetime import datetime, timezone, timedelta
@@ -72,22 +72,61 @@ queue_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-7s %(mess
 logging.getLogger().addHandler(queue_handler)
 
 # --- Run History DB ---
-HISTORY_FILE = backend_dir / "run_history.json"
+HISTORY_DB = backend_dir / "run_history.db"
+
+def get_db_connection():
+    conn = sqlite3.connect(str(HISTORY_DB), timeout=10, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_history_db():
+    try:
+        with get_db_connection() as conn:
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS pipeline_runs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    time TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    signals INTEGER NOT NULL,
+                    message TEXT,
+                    duration_sec INTEGER NOT NULL,
+                    is_auto INTEGER NOT NULL DEFAULT 0
+                )
+                """
+            )
+            conn.commit()
+    except Exception as e:
+        logger.error(f"Failed to initialize history DB: {e}")
 
 def load_history() -> list:
-    if HISTORY_FILE.exists():
-        try:
-            with open(HISTORY_FILE, "r") as f:
-                return json.load(f)
-        except:
-            pass
-    return []
+    try:
+        with get_db_connection() as conn:
+            rows = conn.execute(
+                "SELECT time, status, signals, message, duration_sec, is_auto FROM pipeline_runs ORDER BY time DESC"
+            ).fetchall()
+        return [dict(row) for row in rows]
+    except Exception as e:
+        logger.error(f"Failed to load history from DB: {e}")
+        return []
 
 def save_history_record(record: dict):
-    history = load_history()
-    history.append(record)
-    with open(HISTORY_FILE, "w") as f:
-        json.dump(history, f, indent=2)
+    try:
+        with get_db_connection() as conn:
+            conn.execute(
+                "INSERT INTO pipeline_runs (time, status, signals, message, duration_sec, is_auto) VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    record["time"],
+                    record["status"],
+                    record["signals"],
+                    record.get("message"),
+                    record["duration_sec"],
+                    1 if record.get("is_auto") else 0,
+                ),
+            )
+            conn.commit()
+    except Exception as e:
+        logger.error(f"Failed to save history record to DB: {e}")
 
 RUN_SECRET = os.getenv("RUN_SECRET", "")  # set this in production!
 
@@ -132,7 +171,8 @@ async def execute_pipeline_core(is_auto=False):
             "status": status_key,
             "signals": len(signals),
             "message": msg,
-            "duration_sec": duration
+            "duration_sec": duration,
+            "is_auto": is_auto,
         })
 
 async def execute_health_check_core(lookback_days: int = 30):
@@ -206,6 +246,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"INIT: System timezone: {os.getenv('TZ', 'Not configured')}")
     
     try:
+        init_history_db()
         # Schedule the job to run every Monday-Friday at 7:00 AM EST (New York)
         # This automatically runs the daily scraper pipeline, then triggers a
         # follow-up 7-day health check once the pipeline completes.

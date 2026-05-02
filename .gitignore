@@ -23,6 +23,7 @@ backend/live_*.txt
 backend/final_*.txt
 backend/run_output.txt
 backend/run_history.json
+backend/run_history.db
 backend/__pycache__/
 
 # Node / Nuxt frontend
